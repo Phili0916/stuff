@@ -14,13 +14,11 @@ let options = {
   dbName: 'stuff'
 };
 
-const uri = 'mongodb://localhost:27017/stuff?connectTimeoutMS=1000'
 
-mongoose.connect(uri)
-    .then(r => console.log('test1'))
+mongoose.connect('mongodb://localhost:27017/stuff')
+    .then(r => console.log('connected to mongodb'))
     .catch(error => console.error(error.reason, error.message));
 
-console.log('test')
 
 const stuffRouter = require('./routes/stuff_routes');
 const userRouter = require('./routes/user_routes')

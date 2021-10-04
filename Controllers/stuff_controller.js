@@ -1,6 +1,5 @@
 const stuffModel = require('../model/stuff_model')
 const {STATUS_LOST} = require("../helper/constants");
-const regex = require('regex')
 
 /* Post Request Post your Stuff */
 exports.createPost = async (req, res) => {
@@ -92,8 +91,10 @@ exports.getStuffBy = async (req, res, params) => {
           break
         case 'city':
           console.log("###city")
-          console.log(city);
-          params.localisation = params.localisation.find({city: /an/})
+          console.log(key);
+          console.log(value);
+          params.localisation = params.localisation.find({city: {  }})
+          //https://docs.mongodb.com/manual/reference/operator/query/regex/
           break
       }
     }
