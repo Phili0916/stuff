@@ -67,10 +67,12 @@ exports.getOneStuff = async (req, res) => {
 
 exports.getStuffBy = async (req, res, params) => {
   try {
+    const stuff = await stuffModel.find(req.params)
     console.log('params before change', params)
-    for (const [key, value] of Object.entries(params)) {
+    // for (let key = 0; key < stuff.length; key++) {
+    //   console.log("Stuff name" + key + ": " + stuff[key].localisation.city);
+    for (const [key, value] of Object.entries(stuff)) {
       console.log('key : ' + key + ' /  value : ' + value)
-
       switch (key) {
         case 'minPrice':
           if (!params.price) {
@@ -89,24 +91,62 @@ exports.getStuffBy = async (req, res, params) => {
           }
           delete params.maxPrice
           break
+
+        case 'address':
+        case 'zipcode':
         case 'city':
-          console.log("###city")
-          console.log(key);
-          console.log(value);
-          params.localisation = params.localisation.find({city: {  }})
-          //https://docs.mongodb.com/manual/reference/operator/query/regex/
+          params['localisation.' + key] = value
+          // params.city = stuffModel.findOne({city: req.params.city})
+          // console.log("###city")
+          // console.log(key);
+          // console.log(value);
+          // console.log(params.city);
+          params.city = {$regex: value, $options: 'i'}
+          delete params[key]
+          break
+          //delete params.city
+
+        case 'description':
+          params['description.' + key] = value
+          // if(!params.description) {
+          //   params.description = stuffModel.findOne({description: req.params.description})
+          //   console.log("###description");
+          //   console.log(description);
+          //}
+          delete params[key]
+          break
+
+        case 'type':
+          params['type.' + key] = value
+          // if(!params.type) {
+          //   params.type = stuffModel.findOne({type: req.params.type })
+          //   console.log("###type")
+          //   console.log(type);
+          // }
+          delete params[key]
           break
       }
     }
-
-    console.log('params before request', params)
-    const stuff = await stuffModel.find(params)
+                // if {
+            //   params.city = stuffModel.findOne({city: { $regex: /(n|N)an/g }})
+            //   //https://docs.mongodb.com/manual/reference/operator/query/regex/
+            //   break
+            //   }
+    // console.log('params before request', params)
+    // const stuff = await stuffModel.find(params)
+    // console.log("###params");
+    // console.log(params);
+    // console.log("###stuff")
+    // console.log(stuff);
     if (stuff.length >= 1) {
-      res.status(200).send(stuff)
-      return
-    }
-    res.status(404).send()
-  } catch (e) {
+        res.status(200).send({
+          message: "Here is your stuff",
+          stuff: params
+        })
+        return
+      }
+      res.status(404).send()
+    } catch (e) {
     console.error(e)
     res.status(400).send(e.toString())
   }

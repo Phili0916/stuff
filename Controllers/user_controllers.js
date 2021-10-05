@@ -2,40 +2,46 @@ const bcrypt = require('bcrypt')
 
 const jsonWebToken = require('jsonwebtoken')
 const modelUser = require("../model/user_model");
+const {SALT} = require("../helper/constants");
+
 
 exports.signup = async (req, res) => {
+
   try {
-    const signUp = await bcrypt.hash(req.body.password, 10)
-       const hash = (hash) => {
-          modelUser.create({
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            email: req.body.email,
-            password: hash
-          })
-        }
-    const hashUser = await res.status(201).send({
-      message: 'User saved successfully',
-      signUp
+    const encryptedPassword =  await bcrypt.hash(req.body.password, SALT)
+
+
+    const newUser = await modelUser.create({
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email,
+      password: encryptedPassword
     })
-    return hashUser
+
+
+    res.status(201).send({
+      message: 'User saved successfully',
+      newUser
+    })
+
   } catch
       (error) {
-        res.status(500).send({
-          error: error
-        })
+    res.status(500).send({
+      error: error.toString()
+    })
   }
 }
 
 /* User Login */
 
 exports.login = async function (req, res) {
+  // console.log(req.body)
   try {
-    console.log(req.body.email)
-    console.log(modelUser)
-    // const user = await modelUser.findOne({email: req.body.email})
-    const user = await modelUser.find({})
-    console.log(user);
+    //console.log(req.body.email)
+    //console.log(modelUser)
+    const user = await modelUser.findOne({email: req.body.email})
+    //const user = await modelUser.find({})
+    // console.log(user)
     if (!user) {
       res.status(404).send({message: "user not found"})
       return
@@ -54,10 +60,9 @@ exports.login = async function (req, res) {
       userId: user._id,
       token: token
     })
-  }
-  catch (e) {
+  } catch (e) {
     console.error(e)
-    res.status(500).send({error : e.toString()})
+    res.status(500).send({error: e.toString()})
   }
 }
 

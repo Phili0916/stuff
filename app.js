@@ -6,13 +6,13 @@ const logger = require('morgan');
 
 const mongoose = require('mongoose')
 
-let options = {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  user:process.env.DB_USER,
-  pass: process.env.DB_PASS,
-  dbName: 'stuff'
-};
+// let options = {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true,
+//   user:process.env.DB_USER,
+//   pass: process.env.DB_PASS,
+//   dbName: 'stuff'
+// };
 
 
 mongoose.connect('mongodb://localhost:27017/stuff')

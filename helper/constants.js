@@ -3,4 +3,5 @@ module.exports = {
   STATUS_USED: 2,
   STATUS_LOST: 3,
   STATUS_BROKEN: 4,
+  SALT : 11,
 }
