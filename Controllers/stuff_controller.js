@@ -67,15 +67,13 @@ exports.getOneStuff = async (req, res) => {
 
 exports.getStuffBy = async (req, res, params) => {
   try {
-    const stuff = await stuffModel.find(req.params)
-    console.log('params before change', params)
     // for (let key = 0; key < stuff.length; key++) {
     //   console.log("Stuff name" + key + ": " + stuff[key].localisation.city);
-    for (const [key, value] of Object.entries(stuff)) {
+    for (const [key, value] of Object.entries(params)) {
       console.log('key : ' + key + ' /  value : ' + value)
       switch (key) {
         case 'minPrice':
-          if (!params.price) {
+          if (params.price > 0 && params.price < 30000) {
             params.price = {"$gt": parseFloat(params.minPrice)}
           } else {
             params.price.$gt = parseFloat(params.minPrice)
@@ -83,7 +81,7 @@ exports.getStuffBy = async (req, res, params) => {
           delete params.minPrice
           break
         case 'maxPrice':
-          if (!params.price) {
+          if (params.price > 3000) {
             console.log('enter')
             params.price = {"$lt": parseFloat(params.maxPrice)}
           } else {
@@ -96,42 +94,40 @@ exports.getStuffBy = async (req, res, params) => {
         case 'zipcode':
         case 'city':
           params['localisation.' + key] = value
-          // params.city = stuffModel.findOne({city: req.params.city})
-          // console.log("###city")
-          // console.log(key);
-          // console.log(value);
-          // console.log(params.city);
           params.city = {$regex: value, $options: 'i'}
           delete params[key]
           break
-          //delete params.city
 
         case 'description':
-          params['description.' + key] = value
+          params['description.'] = value
+            //console.log(typeof value)
           // if(!params.description) {
           //   params.description = stuffModel.findOne({description: req.params.description})
           //   console.log("###description");
           //   console.log(description);
           //}
-          delete params[key]
+          delete params['description.']
           break
 
         case 'type':
-          params['type.' + key] = value
+          params['type.'] = value
           // if(!params.type) {
           //   params.type = stuffModel.findOne({type: req.params.type })
           //   console.log("###type")
           //   console.log(type);
           // }
-          delete params[key]
+          delete params['type.']
           break
+        case 'STATUS_NEW':
+        case 'STATUS_USED':
+        case 'STATUS_LOST' :
+        case 'STATUS_BROKEN' :
+          params['status.'] = value
       }
     }
-                // if {
-            //   params.city = stuffModel.findOne({city: { $regex: /(n|N)an/g }})
-            //   //https://docs.mongodb.com/manual/reference/operator/query/regex/
-            //   break
-            //   }
+
+    console.log('params before request', params)
+    const stuff = await stuffModel.find(params)
     // console.log('params before request', params)
     // const stuff = await stuffModel.find(params)
     // console.log("###params");
@@ -141,7 +137,7 @@ exports.getStuffBy = async (req, res, params) => {
     if (stuff.length >= 1) {
         res.status(200).send({
           message: "Here is your stuff",
-          stuff: params
+          stuff: stuff
         })
         return
       }
