@@ -3,5 +3,7 @@ module.exports = {
   STATUS_USED: 2,
   STATUS_LOST: 3,
   STATUS_BROKEN: 4,
+  CATEGORY_MONITOR : 1,
+  CATEGORY_MOUSE : 2,
   SALT : 11,
 }

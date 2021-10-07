@@ -5,7 +5,9 @@ const {Schema} = mongoose;
 
 const StuffSchema = new Schema({
   title: {type: String, required: true},
-  type: {type: String, required: true},
+  type: {
+    type: String,
+    required: true},
   description: {type: String, required: true},
   price: {type: Number, required: true},
   ownerId: {type: String, required: true},

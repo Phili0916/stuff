@@ -106,13 +106,14 @@ exports.getStuffBy = async (req, res, params) => {
           break
 
         case 'status':
-          console.log('key : ' + key + ' /  value : ' + value + ' / type : ' + typeof value)
-            const arrayStatus = value.split(',')
+          params.status = {}
+          if (value) {
+            params.status.$in = value.split(',')
+          }
 
-            delete params[key]
-
-
-
+          if (Object.keys(params.status).length === 0) {
+            delete params.status
+          }
       }
     }
 
@@ -131,7 +132,7 @@ exports.getStuffBy = async (req, res, params) => {
       })
       return
     }
-    res.status(404).send()
+    res.status(404).send({stuff : []})
   } catch (e) {
     console.error(e)
     res.status(400).send(e.toString())
