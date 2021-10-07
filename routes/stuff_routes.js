@@ -48,8 +48,6 @@ router.post('/',
     },
     stuffCtrl.createPost)
 
-router.put('/all/:id', auth, stuffCtrl.updateAllStuff)
-
 /**
  * Update one stuff by its id
  */

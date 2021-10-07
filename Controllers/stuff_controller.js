@@ -114,6 +114,19 @@ exports.getStuffBy = async (req, res, params) => {
           if (Object.keys(params.status).length === 0) {
             delete params.status
           }
+          break
+        case 'category':
+          params.category = {}
+          if (value) {
+            params.category.$in = value.split(',')
+          }
+
+          if (Object.keys(params.category).length === 0) {
+            delete params.category
+          }
+          break
+        default:
+          break
       }
     }
 
@@ -132,7 +145,7 @@ exports.getStuffBy = async (req, res, params) => {
       })
       return
     }
-    res.status(404).send({stuff : []})
+    res.status(404).send({stuff: []})
   } catch (e) {
     console.error(e)
     res.status(400).send(e.toString())
@@ -172,19 +185,25 @@ exports.updateOneStuff = async (req, res) => {
 
   //TODO : improve and change the stuff depending on the body
   try {
-    const updateDescriptionStuff = await stuffModel.findOneAndUpdate({_id: req.params.id}, {description: req.body.description}, {new: true})
-    // console.log("###description");
-    // console.log(req.body.description);
+    for (const [key, value] of Object.entries(req.body)) {
+      switch (key) {
+        case 'city':
+        case 'zipCode':
+        case 'address':
+          req.body['localisation.'+key] = value
+          break
+      }
+    }
+    const updateStuff = await stuffModel.findOneAndUpdate({_id: req.params.id}, req.body, {new: true})
     res.status(201).send({
       message: 'You have updated one stuff',
-      updateDescriptionStuff
+      updateStuff
     })
 
-  } catch
-      (error) {
+  } catch (error) {
     res.status(400).send({
       message: 'You have not updated your stuff description',
-      error
+      error : error.toString()
     })
   }
 }
