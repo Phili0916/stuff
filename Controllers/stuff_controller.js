@@ -70,10 +70,10 @@ exports.getStuffBy = async (req, res, params) => {
     // for (let key = 0; key < stuff.length; key++) {
     //   console.log("Stuff name" + key + ": " + stuff[key].localisation.city);
     for (const [key, value] of Object.entries(params)) {
-      console.log('key : ' + key + ' /  value : ' + value)
+      // console.log('key : ' + key + ' /  value : ' + value)
       switch (key) {
         case 'minPrice':
-          if (params.price > 0 && params.price < 30000) {
+          if (!params.price) {
             params.price = {"$gt": parseFloat(params.minPrice)}
           } else {
             params.price.$gt = parseFloat(params.minPrice)
@@ -81,7 +81,7 @@ exports.getStuffBy = async (req, res, params) => {
           delete params.minPrice
           break
         case 'maxPrice':
-          if (params.price > 3000) {
+          if (!params.price) {
             console.log('enter')
             params.price = {"$lt": parseFloat(params.maxPrice)}
           } else {
@@ -93,36 +93,26 @@ exports.getStuffBy = async (req, res, params) => {
         case 'address':
         case 'zipcode':
         case 'city':
-          params['localisation.' + key] = value
-          params.city = {$regex: value, $options: 'i'}
+          params['localisation.' + key] = {$regex: value, $options: 'i'}
           delete params[key]
           break
 
         case 'description':
-          params['description.'] = value
-            //console.log(typeof value)
-          // if(!params.description) {
-          //   params.description = stuffModel.findOne({description: req.params.description})
-          //   console.log("###description");
-          //   console.log(description);
-          //}
-          delete params['description.']
+          params[key] = {$regex: value, $options: 'i'}
           break
 
         case 'type':
-          params['type.'] = value
-          // if(!params.type) {
-          //   params.type = stuffModel.findOne({type: req.params.type })
-          //   console.log("###type")
-          //   console.log(type);
-          // }
-          delete params['type.']
+          params[key] = value
           break
-        case 'STATUS_NEW':
-        case 'STATUS_USED':
-        case 'STATUS_LOST' :
-        case 'STATUS_BROKEN' :
-          params['status.'] = value
+
+        case 'status':
+          console.log('key : ' + key + ' /  value : ' + value + ' / type : ' + typeof value)
+            const arrayStatus = value.split(',')
+
+            delete params[key]
+
+
+
       }
     }
 
@@ -135,14 +125,14 @@ exports.getStuffBy = async (req, res, params) => {
     // console.log("###stuff")
     // console.log(stuff);
     if (stuff.length >= 1) {
-        res.status(200).send({
-          message: "Here is your stuff",
-          stuff: stuff
-        })
-        return
-      }
-      res.status(404).send()
-    } catch (e) {
+      res.status(200).send({
+        message: "Here is your stuff",
+        stuff: stuff
+      })
+      return
+    }
+    res.status(404).send()
+  } catch (e) {
     console.error(e)
     res.status(400).send(e.toString())
   }
