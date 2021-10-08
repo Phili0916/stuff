@@ -1,23 +1,18 @@
 const bcrypt = require('bcrypt')
-
 const jsonWebToken = require('jsonwebtoken')
 const modelUser = require("../model/user_model");
-const {SALT} = require("../helper/constants");
+const {PASSWORD_SALT} = require("../helper/constants");
 
 
 exports.signup = async (req, res) => {
-
   try {
-    const encryptedPassword =  await bcrypt.hash(req.body.password, SALT)
-
-
+    const encryptedPassword =  await bcrypt.hash(req.body.password, PASSWORD_SALT)
     const newUser = await modelUser.create({
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
       password: encryptedPassword
     })
-
 
     res.status(201).send({
       message: 'User saved successfully',
@@ -33,15 +28,10 @@ exports.signup = async (req, res) => {
 }
 
 /* User Login */
-
 exports.login = async function (req, res) {
-  // console.log(req.body)
+
   try {
-    //console.log(req.body.email)
-    //console.log(modelUser)
     const user = await modelUser.findOne({email: req.body.email})
-    //const user = await modelUser.find({})
-    // console.log(user)
     if (!user) {
       res.status(404).send({message: "user not found"})
       return
@@ -61,7 +51,6 @@ exports.login = async function (req, res) {
       token: token
     })
   } catch (e) {
-    console.error(e)
     res.status(500).send({error: e.toString()})
   }
 }

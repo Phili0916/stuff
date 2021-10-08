@@ -3,27 +3,20 @@ const {body, validationResult} = require('express-validator')
 const router = express.Router();
 const stuffCtrl = require('../Controllers/stuff_controller')
 const auth = require('../middleware/auth')
-const ModelStuff = require("../model/stuff_model");
 
 
-// TODO : GET BY criterion
 router.get('/criterion/',
     auth,
     async function (req, res, next) {
         let params = req.query
-      console.log("###params");
-      console.log(params)
        await stuffCtrl.getStuffBy(req, res, params)
     }
 )
-
-
 
 /* GET All the Stuff. */
 router.get('/',
     auth,
     stuffCtrl.getAllStuff);
-
 
 /* GET One Stuff */
 router.get('/:id',
@@ -31,11 +24,9 @@ router.get('/:id',
     body('options').isObject(),
     stuffCtrl.getOneStuff)
 
-
 /* POST Your Stuff */
 router.post('/',
     auth,
-    body('type').notEmpty(),
     body('title').notEmpty(),
     body('price').notEmpty().isNumeric(),
     (req, res, next) => {
@@ -64,6 +55,9 @@ router.put('/:id',
     },
     stuffCtrl.updateOneStuff)
 
+/**
+ * Delete stuff (set status to lost)
+ */
 router.delete('/:id', auth, stuffCtrl.deleteStuff)
 
 

@@ -10,7 +10,7 @@ exports.createPost = async (req, res) => {
       postStuff
     })
   } catch
-      (error) {
+    (error) {
     res.status(400).send({
       error: error
     })
@@ -33,7 +33,7 @@ exports.getAllStuff = async function (req, res,) {
     })
 
   } catch
-      (error) {
+    (error) {
     res.status(400).json({
       error: error
     })
@@ -57,7 +57,7 @@ exports.getOneStuff = async (req, res) => {
     })
 
   } catch
-      (error) {
+    (error) {
     res.status(400).send({
       message: 'No stuff found for you',
       error: error
@@ -67,10 +67,7 @@ exports.getOneStuff = async (req, res) => {
 
 exports.getStuffBy = async (req, res, params) => {
   try {
-    // for (let key = 0; key < stuff.length; key++) {
-    //   console.log("Stuff name" + key + ": " + stuff[key].localisation.city);
     for (const [key, value] of Object.entries(params)) {
-      // console.log('key : ' + key + ' /  value : ' + value)
       switch (key) {
         case 'minPrice':
           if (!params.price) {
@@ -132,12 +129,6 @@ exports.getStuffBy = async (req, res, params) => {
 
     console.log('params before request', params)
     const stuff = await stuffModel.find(params)
-    // console.log('params before request', params)
-    // const stuff = await stuffModel.find(params)
-    // console.log("###params");
-    // console.log(params);
-    // console.log("###stuff")
-    // console.log(stuff);
     if (stuff.length >= 1) {
       res.status(200).send({
         message: "Here is your stuff",
@@ -152,29 +143,6 @@ exports.getStuffBy = async (req, res, params) => {
   }
 }
 
-/* Put Request Update your Stuff */
-/**
- * Update all stuff by criterion
- * @param req
- * @param res
- */
-exports.updateAllStuff = async (req, res) => {
-  console.log("updateAllStuff")
-  try {
-    const updateAllStuff = await stuffModel.updateOne({_id: req.params.id}, req.body)
-    res.status(201).send({
-      message: 'You have updated all your stuff',
-      updateAllStuff
-    })
-  } catch
-      (error) {
-    res.status(400).send({
-      message: 'You have not updated your stuff',
-      error
-    })
-  }
-}
-
 /**
  * Put Request Update Stuff Description
  * @param req
@@ -182,15 +150,13 @@ exports.updateAllStuff = async (req, res) => {
  * @returns {Promise<void>}
  */
 exports.updateOneStuff = async (req, res) => {
-
-  //TODO : improve and change the stuff depending on the body
   try {
     for (const [key, value] of Object.entries(req.body)) {
       switch (key) {
         case 'city':
         case 'zipCode':
         case 'address':
-          req.body['localisation.'+key] = value
+          req.body['localisation.' + key] = value
           break
       }
     }
@@ -203,12 +169,12 @@ exports.updateOneStuff = async (req, res) => {
   } catch (error) {
     res.status(400).send({
       message: 'You have not updated your stuff description',
-      error : error.toString()
+      error: error.toString()
     })
   }
 }
 
-/* Delete Request Delete Stuff by Id */
+/* Delete Request Delete Stuff by Id : set status to lost*/
 exports.deleteStuff = async (req, res) => {
   try {
     const deleteStuff = await stuffModel.findOneAndUpdate({_id: req.params.id}, {status: STATUS_LOST})
@@ -217,7 +183,7 @@ exports.deleteStuff = async (req, res) => {
       deleteStuff
     })
   } catch
-      (error) {
+    (error) {
     res.status(400).send({
       message: 'You have not gotten rid of your stuff',
       error
