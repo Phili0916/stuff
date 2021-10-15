@@ -27,8 +27,7 @@ router.post('/login',
 router.get('/getUser/',
     auth,
     async function (req, res, next) {
-      let params = req.query
-      await userCtrl.getUser(req, res, params)
+      await userCtrl.getUser(req, res)
     }
 )
 
