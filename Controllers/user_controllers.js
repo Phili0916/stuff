@@ -55,6 +55,33 @@ exports.login = async function (req, res) {
   }
 }
 
+/*Get User */
+
+exports.getUser = async (req, res) => {
+  let params = req.query
+  console.log(params)
+  try {
+    const user = await modelUser.findOne({_id: req.query.id || ''})
+
+    if (!user) {
+      res.status(404).send({message: "user not found"})
+      return
+    }
+
+    user.password =''
+    res.status(200).send({
+      message: 'User has been found',
+      user : user
+    })
+  } catch (error) {
+    res.status(400).send({
+      message: 'No user found',
+      error: error.toString()
+    })
+  }
+
+}
+
 /* Delete User */
 
 exports.delete = async function (req, res) {
@@ -73,24 +100,4 @@ exports.delete = async function (req, res) {
   }
 }
 
-// exports.getUser = async (res, req) => {
-//   try {
-//     const user = await modelUser.findOne({email: req.params.email})
-//
-//     if (!user) {
-//       res.status(404).send({message: "user not found"})
-//       return
-//     }
-//     res.status(200).send({
-//       message: 'User has been found',
-//       user
-//     })
-//   } catch
-//       (error) {
-//       res.status(400).send({
-//       message: 'No user found',
-//       error: error
-//     })
-//   }
 
-//}
