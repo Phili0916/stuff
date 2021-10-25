@@ -10,7 +10,7 @@ exports.createPost = async (req, res) => {
       postStuff
     })
   } catch
-    (error) {
+      (error) {
     res.status(400).send({
       error: error
     })
@@ -20,20 +20,19 @@ exports.createPost = async (req, res) => {
 /* Get Request Get All Stuff */
 exports.getAllStuff = async function (req, res,) {
   try {
-    const allStuff = await stuffModel.find()
-    if (allStuff.length) {
-      res.status(200).send({
-        message: 'You have retrieved all your stuff!',
-        stuff: allStuff
-      })
-      return
-    }
+    const allStuff = await stuffModel.paginate({
+          sort: { createdAt: -1 },
+          page: 1,
+          limit: 10
+        }
+    )
     res.status(200).send({
-      message: 'You have not retrieved all your stuff!'
-    })
+          message: 'You have retrieved all your stuff!',
+          stuff: allStuff
+        })
 
   } catch
-    (error) {
+      (error) {
     res.status(400).json({
       error: error
     })
@@ -57,7 +56,7 @@ exports.getOneStuff = async (req, res) => {
     })
 
   } catch
-    (error) {
+      (error) {
     res.status(400).send({
       message: 'No stuff found for you',
       error: error
@@ -95,6 +94,7 @@ exports.getStuffBy = async (req, res, params) => {
           break
 
         case 'description':
+        case 'title':
           params[key] = {$regex: value, $options: 'i'}
           break
 
@@ -126,17 +126,21 @@ exports.getStuffBy = async (req, res, params) => {
           break
       }
     }
-
+const myLimit = params.limit || 10
     console.log('params before request', params)
-    const stuff = await stuffModel.find(params)
-    if (stuff.length >= 1) {
+    // const stuff = await stuffModel.find(params)
+    const stuff = await stuffModel.paginate(params, {
+          sort: { createdAt: -1 },
+          page: 1,
+          limit: myLimit
+        }
+    )
+
       res.status(200).send({
         message: "Here is your stuff",
-        stuff: stuff
+       stuff
       })
       return
-    }
-    res.status(404).send({stuff: []})
   } catch (e) {
     console.error(e)
     res.status(400).send(e.toString())
@@ -183,7 +187,7 @@ exports.deleteStuff = async (req, res) => {
       deleteStuff
     })
   } catch
-    (error) {
+      (error) {
     res.status(400).send({
       message: 'You have not gotten rid of your stuff',
       error

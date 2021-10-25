@@ -62,7 +62,6 @@ exports.getUser = async (req, res) => {
   console.log(params)
   try {
     const user = await modelUser.findOne({_id: req.query.id || ''})
-
     if (!user) {
       res.status(404).send({message: "user not found"})
       return

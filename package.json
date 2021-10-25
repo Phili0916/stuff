@@ -20,5 +20,8 @@
     "mv": "^2.1.1",
     "nodemon": "^2.0.13",
     "pug": "2.0.0-beta11"
+  },
+  "devDependencies": {
+    "mongoose-paginate-v2": "^1.4.2"
   }
 }
