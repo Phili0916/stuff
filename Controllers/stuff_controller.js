@@ -3,8 +3,10 @@ const {STATUS_LOST} = require("../helper/constants");
 
 /* Post Request Post your Stuff */
 exports.createPost = async (req, res) => {
+  console.log('req.body', req.body)
   try {
-    const postStuff = await stuffModel.create(req.body)
+    //const postStuff = await stuffModel.create(req.body)
+    const postStuff = await new stuffModel(req.body).save()
     res.status(201).send({
       message: 'Post Saved Successfully!',
       postStuff
