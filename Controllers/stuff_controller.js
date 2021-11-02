@@ -6,10 +6,10 @@ exports.createPost = async (req, res) => {
   console.log('req.body', req.body)
   try {
     //const postStuff = await stuffModel.create(req.body)
-    const postStuff = await new stuffModel(req.body).save()
+    const newStuff = await new stuffModel(req.body).save()
     res.status(201).send({
       message: 'Post Saved Successfully!',
-      postStuff
+      newStuff
     })
   } catch
       (error) {

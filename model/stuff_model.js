@@ -28,7 +28,8 @@ const StuffSchema = new Schema({
       CATEGORY_DESKTOP, CATEGORY_HEADPHONE, CATEGORY_MICROPHONE, CATEGORY_SPEAKERPHONE, CATEGORY_MOBILE, CATEGORY_TABLET,
       CATEGORY_MISCELLANEOUS
     ],
-    default:CATEGORY_MISCELLANEOUS
+    default:CATEGORY_MISCELLANEOUS,
+    required: true,
   },
   price: {type: Number, required: true},
   ownerId: {

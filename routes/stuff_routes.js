@@ -28,13 +28,12 @@ router.get('/:id',
 router.post('/',
     auth,
     body('title').notEmpty(),
-    body('price').notEmpty().isNumeric(),
+    body('price').isNumeric(),
     (req, res, next) => {
-      // Finds the validation errors in this request and wraps them in an object with handy functions
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).send({errors: errors.array()});
-      }
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).send({errors: errors.array()});
+    }
       next()
     },
     stuffCtrl.createPost)
