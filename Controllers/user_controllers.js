@@ -81,6 +81,28 @@ exports.getUser = async (req, res) => {
 
 }
 
+exports.getAllUsers = async (req, res) => {
+  //console.log(req, res)
+  try {
+    const allUsers = await modelUser.find()
+    // console.log("allUsers", allUsers)
+    if (allUsers.length) {
+      res.status(200).send({
+        message: 'You have retrieved Every User!',
+        user: allUsers
+      })
+      return
+    }
+    res.status(200).send({
+      message: 'You have not retrieved all the users!'
+    })
+  } catch (error) {
+    res.status(400).json({
+      error: error
+    })
+  }
+}
+
 /* Delete User */
 
 exports.delete = async function (req, res) {

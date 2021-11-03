@@ -31,6 +31,13 @@ router.get('/getUser/',
     }
 )
 
+router.get('/getAllUsers',
+    auth,
+    async function (req, res,next) {
+      await userCtrl.getAllUsers(req, res)
+    }
+)
+
 router.delete('/delete', userCtrl.delete)
 
 
