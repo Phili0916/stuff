@@ -157,6 +157,7 @@ const myLimit = params.limit || 10
  */
 exports.updateOneStuff = async (req, res) => {
   try {
+    console.log(req)
     for (const [key, value] of Object.entries(req.body)) {
       switch (key) {
         case 'city':
@@ -186,7 +187,7 @@ exports.deleteStuff = async (req, res) => {
     const deleteStuff = await stuffModel.findOneAndUpdate({_id: req.params.id}, {status: STATUS_LOST})
     res.status(200).send({
       message: 'You have deleted your stuff',
-      deleteStuff
+      stuff: deleteStuff
     })
   } catch
       (error) {

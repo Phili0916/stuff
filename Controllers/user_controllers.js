@@ -89,7 +89,7 @@ exports.getAllUsers = async (req, res) => {
     if (allUsers.length) {
       res.status(200).send({
         message: 'You have retrieved Every User!',
-        user: allUsers
+        users: allUsers
       })
       return
     }
