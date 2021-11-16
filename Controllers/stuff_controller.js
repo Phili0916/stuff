@@ -71,6 +71,12 @@ exports.getStuffBy = async (req, res, params) => {
   try {
     for (const [key, value] of Object.entries(params)) {
       switch (key) {
+        case 'ownerId':
+          if (!params.ownerId) {
+            params.ownerId = {"$gt": parseFloat(params.ownerId)}
+          }
+          delete params.ownerId
+          break
         case 'minPrice':
           if (!params.price) {
             params.price = {"$gt": parseFloat(params.minPrice)}
