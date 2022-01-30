@@ -59,9 +59,10 @@ exports.login = async function (req, res) {
 
 exports.getUser = async (req, res) => {
   let params = req.query
-  console.log(params)
+  console.log(req.params.id, req.query.id, 'okkk')
   try {
-    const user = await modelUser.findOne({_id: req.query.id || ''})
+    const user = await modelUser.findOne({_id: req.params.id || ''})
+   // console.log(user)
     if (!user) {
       res.status(404).send({message: "user not found"})
       return

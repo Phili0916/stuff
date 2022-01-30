@@ -152,9 +152,8 @@ const myLimit = params.limit || 10
        stuff
       })
       return
-  } catch (e) {
-    console.error(e)
-    res.status(400).send(e.toString())
+  } catch (error) {
+    res.status(400).send(error.toString())
   }
 }
 

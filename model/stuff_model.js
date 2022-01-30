@@ -33,9 +33,9 @@ const StuffSchema = new Schema({
   },
   price: {type: Number, required: true},
   ownerId: {
-    type: mongoose.Types.ObjectId,
+    type: String,
     required: false},
-  reference: {type: String, required: false},
+  //reference: {type: String, required: false},
   status: {
     type: Number,
     enum: [STATUS_NEW, STATUS_USED, STATUS_LOST, STATUS_BROKEN],

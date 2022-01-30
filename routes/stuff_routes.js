@@ -15,7 +15,7 @@ router.get('/criterion/',
 
 /* GET All the Stuff. */
 router.get('/',
-    auth,
+    // auth,
     stuffCtrl.getAllStuff);
 
 /* GET One Stuff */

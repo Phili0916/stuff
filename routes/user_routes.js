@@ -24,7 +24,7 @@ router.post('/login',
     },
     userCtrl.login)
 
-router.get('/getUser/',
+router.get('/getUser/:id',
     auth,
     async function (req, res, next) {
       await userCtrl.getUser(req, res)
